@@ -42,6 +42,8 @@
             this.menuItem_ClearLog = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_HideJournal = new System.Windows.Forms.ToolStripMenuItem();
             this.FireLog = new System.Windows.Forms.ListBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.amountDeposited = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nmSum)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -52,13 +54,13 @@
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
-            this.btnOK.Location = new System.Drawing.Point(12, 111);
+            this.btnOK.Location = new System.Drawing.Point(12, 137);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(314, 38);
+            this.btnOK.Size = new System.Drawing.Size(290, 38);
             this.btnOK.TabIndex = 1;
             this.btnOK.Text = "ОК";
             this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            this.btnOK.Click += new System.EventHandler(this.BtnOK_Click);
             this.btnOK.KeyUp += new System.Windows.Forms.KeyEventHandler(this.KeyUp_Excute);
             // 
             // rbPay
@@ -93,15 +95,15 @@
             this.nmSum.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
             this.nmSum.Location = new System.Drawing.Point(102, 73);
             this.nmSum.Maximum = new decimal(new int[] {
-            500000000,
-            0,
+            705032704,
+            1,
             0,
             0});
             this.nmSum.Name = "nmSum";
-            this.nmSum.Size = new System.Drawing.Size(224, 32);
+            this.nmSum.Size = new System.Drawing.Size(200, 32);
             this.nmSum.TabIndex = 0;
             this.nmSum.ThousandsSeparator = true;
-            this.nmSum.KeyDown += new System.Windows.Forms.KeyEventHandler(this.nmSum_KeyDown);
+            this.nmSum.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NmSum_KeyDown);
             this.nmSum.KeyUp += new System.Windows.Forms.KeyEventHandler(this.KeyUp_Excute);
             // 
             // label1
@@ -118,9 +120,9 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statuslabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 336);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 180);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(338, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(314, 22);
             this.statusStrip1.TabIndex = 5;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -136,7 +138,7 @@
             this.сообщенияToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(338, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(314, 33);
             this.menuStrip1.TabIndex = 6;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -154,7 +156,7 @@
             this.menuItem_CloseShift.Name = "menuItem_CloseShift";
             this.menuItem_CloseShift.Size = new System.Drawing.Size(212, 30);
             this.menuItem_CloseShift.Text = "Закрыть смену";
-            this.menuItem_CloseShift.Click += new System.EventHandler(this.menuItem_CloseShift_Click);
+            this.menuItem_CloseShift.Click += new System.EventHandler(this.MenuItem_CloseShift_Click);
             // 
             // сообщенияToolStripMenuItem
             // 
@@ -171,7 +173,7 @@
             this.menuItem_ClearLog.Name = "menuItem_ClearLog";
             this.menuItem_ClearLog.Size = new System.Drawing.Size(342, 30);
             this.menuItem_ClearLog.Text = "Очистить журнал сообщений";
-            this.menuItem_ClearLog.Click += new System.EventHandler(this.menuItem_ClearLog_Click);
+            this.menuItem_ClearLog.Click += new System.EventHandler(this.MenuItem_ClearLog_Click);
             // 
             // MenuItem_HideJournal
             // 
@@ -186,17 +188,40 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.FireLog.FormattingEnabled = true;
-            this.FireLog.Location = new System.Drawing.Point(12, 155);
+            this.FireLog.Location = new System.Drawing.Point(12, 181);
             this.FireLog.Name = "FireLog";
-            this.FireLog.Size = new System.Drawing.Size(314, 160);
+            this.FireLog.Size = new System.Drawing.Size(290, 4);
             this.FireLog.TabIndex = 7;
+            this.FireLog.Visible = false;
             this.FireLog.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FireLog_KeyUp);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
+            this.label2.Location = new System.Drawing.Point(7, 108);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(104, 26);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Внесено:";
+            // 
+            // amountDeposited
+            // 
+            this.amountDeposited.AutoSize = true;
+            this.amountDeposited.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
+            this.amountDeposited.Location = new System.Drawing.Point(117, 108);
+            this.amountDeposited.Name = "amountDeposited";
+            this.amountDeposited.Size = new System.Drawing.Size(72, 26);
+            this.amountDeposited.TabIndex = 9;
+            this.amountDeposited.Text = "0 руб.";
             // 
             // SBRF
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(338, 358);
+            this.ClientSize = new System.Drawing.Size(314, 202);
+            this.Controls.Add(this.amountDeposited);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.FireLog);
             this.Controls.Add(this.menuStrip1);
@@ -206,7 +231,7 @@
             this.Controls.Add(this.rbPay);
             this.Controls.Add(this.btnOK);
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(330, 215);
+            this.MinimumSize = new System.Drawing.Size(330, 241);
             this.Name = "SBRF";
             this.Text = "SBRF";
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.KeyUp_Excute);
@@ -236,6 +261,8 @@
         private System.Windows.Forms.ToolStripMenuItem сообщенияToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuItem_ClearLog;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_HideJournal;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label amountDeposited;
     }
 }
 
