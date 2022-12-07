@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 
 namespace SBRF_Soft
 {
@@ -13,7 +15,23 @@ namespace SBRF_Soft
             /* Возврат        */
             eRefund = 3,
             /* Закрытие смены */
-            eCloseShift = 7
+            eCloseShift = 7,
+            /* Без операции */
+            eNull = -1
+        }
+
+        private struct MsgItem
+        {
+            public string msg;
+            public double value;
+            public code opertaion;
+
+            public void Create(string msg, double value, code operation)
+            {
+                this.msg = msg;
+                this.value = value;
+                this.opertaion = operation;
+            }
         }
 
         // Execute code
@@ -27,25 +45,39 @@ namespace SBRF_Soft
         const string cRefundSuccess = "Возврат пройден успешно!";
 
         const string cCloseShift = "Смена закрыта - {0} на сумму: {1:F}";
+        
+        const string cDeposite = "{0} руб.";
 
-        private double sum;
-        private int activeShift;
+        // Сумма взноса
+        private double gDeposited = 0;
+        // Начальная смена
+        private int gActiveShift = 1;
+        // Связанный список с формой логов
+        private List<MsgItem> gListItemFireLog = new List<MsgItem>();
 
         public SBRF()
         {
             // create
             InitializeComponent();
 
-            ClearNmSum();
-
-            // Сумма взноса
-            sum = 0;
-
-            // Устанавливаем начальную смену
-            activeShift = 1;
+            ClearNumerimSum();
         }
 
-        private void ClearNmSum()
+        private void ClearSum()
+        {
+            // Обнуляем результат
+            gDeposited = 0;
+            amountDeposited.Text = "0 руб.";
+        }
+
+        private void ClearJournal()
+        {
+            FireLog.Items.Clear();
+            gListItemFireLog.Clear();
+            ClearSum();
+        }
+
+        private void ClearNumerimSum()
         {
             nmSum.Controls[0].Visible = false;
             nmSum.Value = 0;
@@ -53,50 +85,95 @@ namespace SBRF_Soft
             nmSum.Focus();
         }
 
-        private void DoChangeDeposited(double value)
+        private void DoChangeDeposited(double value, code code = code.eNull)
         {
-            if (rbPay.Checked)
+            if (code == code.eNull)
             {
-                sum += value;
+                if (rbPay.Checked)
+                {
+                    gDeposited += value;
+                }
+                else if (rbRefund.Checked || (code == code.ePay))
+                {
+                    gDeposited -= value;
+                }
             }
-            else if (rbRefund.Checked)
+            else
             {
-                sum -= value;
+                switch (code) {
+                    case code.ePay:
+                        gDeposited += value;
+                        break;
+                    
+                    case code.eRefund:
+                        gDeposited -= value;
+                        break;
+                }
             }
-            amountDeposited.Text = String.Format("{0} руб.", sum);
+            amountDeposited.Text = String.Format(cDeposite, gDeposited);
         }
 
         private void AddMsgFireLog(string msg, double value)
         {
-            if (cCloseShift == msg)
+            if(msg == null)
             {
-                FireLog.Items.Insert(0, String.Format(msg, DateTime.Now, value));
+                msg = "";
             }
-            else
+            
+            MsgItem item = new MsgItem();
+            
+            switch (msg)
             {
-                FireLog.Items.Insert(0, String.Format(msg, activeShift, DateTime.Now, value));
+                case cCloseShift:
+                    item.Create(String.Format(msg, DateTime.Now, value), value, code.eCloseShift);
+                    break;
+
+                case cRefund:
+                    item.Create(String.Format(msg, gActiveShift, DateTime.Now, value), value, code.ePay);
+                    break;
+
+                case cPay:
+                    item.Create(String.Format(msg, gActiveShift, DateTime.Now, value), value, code.eRefund);
+                    break;
             }
+
+            FireLog.Items.Insert(0, item.msg);
+            
+            gListItemFireLog.Insert(0, item);
         }
 
         private void AddMsgStatus(string msg)
         {
-            statuslabel.Text = msg;
+            if(msg == null)
+            {
+                statuslabel.Text = "";
+            }
+            else
+            {
+                statuslabel.Text = msg;
+            }
         }
 
         private void NewShift()
         {
-            // Обнуляем результат
-            sum = 0;
-            amountDeposited.Text = "0 руб.";
+            ClearSum();
 
+            // Очищаем зависимости
+            gListItemFireLog.Clear();
+            
             // Открываем след. смену
-            activeShift++;
+            gActiveShift++;
         }
 
         private void DoPerformOperation(Process AProc)
         {
             try
             {
+                if (AProc == null)
+                {
+                    return;
+                }
+                
                 double sumval = Convert.ToDouble(nmSum.Value);
 
                 // Преобразование по требованию заказчика
@@ -172,7 +249,7 @@ namespace SBRF_Soft
                 proc.Close();
 
                 // Очистить строку и значения
-                ClearNmSum();
+                ClearNumerimSum();
             }
         }
 
@@ -191,10 +268,10 @@ namespace SBRF_Soft
                 }
                 
                 // Добавляем сообщение в статус
-                AddMsgStatus(String.Format(cCloseShift, DateTime.Now, sum));
+                AddMsgStatus(String.Format(cCloseShift, DateTime.Now, gDeposited));
 
                 // Добавляем сообщение в лог (сообщение - сумма)
-                AddMsgFireLog(cCloseShift, sum);
+                AddMsgFireLog(cCloseShift, gDeposited);
 
                 // Без использования оболочки
                 proc.StartInfo.UseShellExecute = false;
@@ -257,7 +334,7 @@ namespace SBRF_Soft
                 return;
             }
 
-            FireLog.Items.Clear();
+            ClearJournal();
         }
 
         private void MenuItem_HideJournal_Click(object sender, EventArgs e)
@@ -287,7 +364,29 @@ namespace SBRF_Soft
         {
             if (e.KeyCode == Keys.Delete)
             {
-                FireLog.Items.Remove(FireLog.SelectedItem);
+                try
+                {
+                    if (gListItemFireLog.Count == 0)
+                    {
+                        return;
+                    }
+
+                    if(FireLog.SelectedIndex > gListItemFireLog.Count - 1)
+                    {
+                        return;
+                    }
+
+                    // Обновляем запись
+                    DoChangeDeposited(gListItemFireLog[FireLog.SelectedIndex].value, gListItemFireLog[FireLog.SelectedIndex].opertaion);
+
+                    // Удаляем объект из списка
+                    gListItemFireLog.RemoveAt(FireLog.SelectedIndex);
+                }
+                finally
+                {
+                    // Удаляем сообщение из лога
+                    FireLog.Items.Remove(FireLog.SelectedItem);
+                }
             }
         }
     }
