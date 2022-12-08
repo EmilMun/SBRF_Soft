@@ -41,6 +41,7 @@
             this.сообщенияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_ClearLog = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_HideJournal = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_About = new System.Windows.Forms.ToolStripMenuItem();
             this.FireLog = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
             this.amountDeposited = new System.Windows.Forms.Label();
@@ -56,7 +57,7 @@
             this.btnOK.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
             this.btnOK.Location = new System.Drawing.Point(12, 137);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(290, 38);
+            this.btnOK.Size = new System.Drawing.Size(297, 38);
             this.btnOK.TabIndex = 1;
             this.btnOK.Text = "ОК";
             this.btnOK.UseVisualStyleBackColor = true;
@@ -100,7 +101,7 @@
             0,
             0});
             this.nmSum.Name = "nmSum";
-            this.nmSum.Size = new System.Drawing.Size(200, 32);
+            this.nmSum.Size = new System.Drawing.Size(207, 32);
             this.nmSum.TabIndex = 0;
             this.nmSum.ThousandsSeparator = true;
             this.nmSum.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NmSum_KeyDown);
@@ -122,7 +123,7 @@
             this.statuslabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 180);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(314, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(321, 22);
             this.statusStrip1.TabIndex = 5;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -135,10 +136,11 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuItem_Window,
-            this.сообщенияToolStripMenuItem});
+            this.сообщенияToolStripMenuItem,
+            this.menuItem_About});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(314, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(321, 33);
             this.menuStrip1.TabIndex = 6;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -182,6 +184,14 @@
             this.MenuItem_HideJournal.Text = "Скрыть\\показать журнал";
             this.MenuItem_HideJournal.Click += new System.EventHandler(this.MenuItem_HideJournal_Click);
             // 
+            // menuItem_About
+            // 
+            this.menuItem_About.Font = new System.Drawing.Font("Segoe UI", 14F);
+            this.menuItem_About.Name = "menuItem_About";
+            this.menuItem_About.Size = new System.Drawing.Size(140, 29);
+            this.menuItem_About.Text = "О программе";
+            this.menuItem_About.Click += new System.EventHandler(this.menuItem_About_Click);
+            // 
             // FireLog
             // 
             this.FireLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -190,7 +200,7 @@
             this.FireLog.FormattingEnabled = true;
             this.FireLog.Location = new System.Drawing.Point(12, 181);
             this.FireLog.Name = "FireLog";
-            this.FireLog.Size = new System.Drawing.Size(290, 4);
+            this.FireLog.Size = new System.Drawing.Size(297, 4);
             this.FireLog.TabIndex = 7;
             this.FireLog.Visible = false;
             this.FireLog.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FireLog_KeyUp);
@@ -219,7 +229,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(314, 202);
+            this.ClientSize = new System.Drawing.Size(321, 202);
             this.Controls.Add(this.amountDeposited);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.statusStrip1);
@@ -231,7 +241,7 @@
             this.Controls.Add(this.rbPay);
             this.Controls.Add(this.btnOK);
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(330, 241);
+            this.MinimumSize = new System.Drawing.Size(337, 241);
             this.Name = "SBRF";
             this.Text = "SBRF";
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.KeyUp_Excute);
@@ -263,6 +273,7 @@
         private System.Windows.Forms.ToolStripMenuItem MenuItem_HideJournal;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label amountDeposited;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_About;
     }
 }
 
