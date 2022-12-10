@@ -7,7 +7,10 @@ namespace SBRF_Soft
 {
     public partial class SBRF : Form
     {
-        enum code
+        /// <summary>
+        /// Нумераторы команд подаваемые внешнему процессу
+        /// </summary>
+        enum Code
         {
             /* Оплата         */
             ePay = 1,
@@ -19,10 +22,11 @@ namespace SBRF_Soft
             eNull = -1
         }
 
-        // Execute code
-        const string cProcessCMD = "cmd.exe";
+        // Команды подаваемые в процесс
+        const string cProcessCMD = "cmd.exe";    
         const string cLoadParam = "/Cloadparm.exe {0:D} {1:D}";
 
+        // Форматные строки сообщений для логирования
         const string cFrmtPay = "[Смена {0} - {1}] Оплата на сумму: {2:F} руб.";
         const string cMsgPaySuccess = "Оплата прошла успешно!";
 
@@ -32,13 +36,16 @@ namespace SBRF_Soft
         const string cFrmtCloseShift = "Смена закрыта - {0} на сумму: {1:F}"; 
         const string cFrmtDeposite = "{0} руб.";
 
+        /// <summary>
+        /// Структура хранящая информацию об операции
+        /// </summary>
         private struct MsgItem
         {
             public string msg;
             public double value;
-            public code opertaion;
+            public Code opertaion;
 
-            public void Create(string msg, double value, code operation)
+            public void Create(string msg, double value, Code operation)
             {
                 this.msg = msg;
                 this.value = value;
@@ -60,7 +67,10 @@ namespace SBRF_Soft
 
             ClearNumericField();
         }
-        
+
+        /// <summary>
+        /// Очистка значений внесенной/извлеченной суммы
+        /// </summary>
         private void ClearSum()
         {
             // Обнуляем результат
@@ -68,6 +78,9 @@ namespace SBRF_Soft
             amountDeposited.Text = "0 руб.";
         }
 
+        /// <summary>
+        /// Очистка журнала, а так же связанного с ней списка структур
+        /// </summary>
         private void ClearJournal()
         {
             FireLog.Items.Clear();
@@ -75,6 +88,9 @@ namespace SBRF_Soft
             ClearSum();
         }
 
+        /// <summary>
+        /// Очистка поля ввода от текста, установка на ней фокуса
+        /// </summary>
         private void ClearNumericField()
         {
             nmSum.Controls[0].Visible = false;
@@ -83,11 +99,14 @@ namespace SBRF_Soft
             nmSum.Focus();
         }
 
-        private void DoChangeDeposited(double AValue, code ACode = code.eNull)
+        /// <summary>
+        /// Универсальная функция для изменения суммарного депозита
+        /// </summary>
+        private void DoChangeDeposited(double AValue, Code ACode = Code.eNull)
         {
             switch (ACode)
             {
-                case code.eNull:
+                case Code.eNull:
                     if (rbPay.Checked)
                     {
                         gDeposited += AValue;
@@ -98,17 +117,21 @@ namespace SBRF_Soft
                     }
                     break;
 
-                case code.ePay:
+                case Code.ePay:
                     gDeposited += AValue;
                     break;
 
-                case code.eRefund:
+                case Code.eRefund:
                     gDeposited -= AValue;
                     break;
             }
+            // Изменяет значение депозита
             amountDeposited.Text = String.Format(cFrmtDeposite, gDeposited);
         }
 
+        /// <summary>
+        /// Универсальная функция логирования, создает запись об пройденной операции.
+        /// </summary>
         private void AddMsgFireLog(string msg, double value)
         {
             if (msg == null)
@@ -121,15 +144,15 @@ namespace SBRF_Soft
             switch (msg)
             {
                 case cFrmtCloseShift:
-                    item.Create(String.Format(msg, DateTime.Now, value), value, code.eCloseShift);
+                    item.Create(String.Format(msg, DateTime.Now, value), value, Code.eCloseShift);
                     break;
 
                 case cFrmtRefund:
-                    item.Create(String.Format(msg, gActiveShift, DateTime.Now, value), value, code.ePay);
+                    item.Create(String.Format(msg, gActiveShift, DateTime.Now, value), value, Code.ePay);
                     break;
 
                 case cFrmtPay:
-                    item.Create(String.Format(msg, gActiveShift, DateTime.Now, value), value, code.eRefund);
+                    item.Create(String.Format(msg, gActiveShift, DateTime.Now, value), value, Code.eRefund);
                     break;
             }
 
@@ -138,11 +161,17 @@ namespace SBRF_Soft
             gLstItmFrLog.Insert(0, item);
         }
 
+        /// <summary>
+        /// Изменяет текст в панели статуса.
+        /// </summary>
         private void AddMsgStatus(string msg)
         {
             statuslabel.Text = msg ?? "";
         }
 
+        /// <summary>
+        /// Открывает новую смену.
+        /// </summary>
         private void NewShift()
         {
             ClearSum();
@@ -154,6 +183,10 @@ namespace SBRF_Soft
             gActiveShift++;
         }
 
+        /// <summary>
+        /// Получая процесс на вход, выполняет операцию по оплате, или возврате средств.
+        /// Так же создает сообщения о ходе операции.
+        /// </summary>
         private void DoPerformOperation(Process AProc)
         {
             try
@@ -171,7 +204,7 @@ namespace SBRF_Soft
                 if (rbPay.Checked) // Оплата
                 {
                     // Указываем параметры для загрузки
-                    AProc.StartInfo.Arguments = String.Format(cLoadParam, code.ePay, value);
+                    AProc.StartInfo.Arguments = String.Format(cLoadParam, Code.ePay, value);
                     // Вносим запись в лог (смена - дата - сумма)
                     AddMsgFireLog(cFrmtPay, sumval);
                     // Добавляем запись в статус-бар
@@ -180,7 +213,7 @@ namespace SBRF_Soft
                 else if (rbRefund.Checked) // Возврат
                 {
                     // Указываем параметры для загрузки
-                    AProc.StartInfo.Arguments = String.Format(cLoadParam, code.eRefund, value);
+                    AProc.StartInfo.Arguments = String.Format(cLoadParam, Code.eRefund, value);
                     // Вносим запись в лог (смена - дата - сумма)
                     AddMsgFireLog(cFrmtRefund, sumval);
                     // Добавляем запись в статус-бар
@@ -192,6 +225,7 @@ namespace SBRF_Soft
             }
             catch (OverflowException)
             {
+                // NOTE: Ограничения заказчика
                 if (MessageBox.Show("Взнос не может быть больше 5e9", "Переполнение",
                     MessageBoxButtons.OK, MessageBoxIcon.Information,
                     MessageBoxDefaultButton.Button1) == DialogResult.OK)
@@ -202,6 +236,9 @@ namespace SBRF_Soft
         }
 
         /* ---------- Main ---------- */
+        /// <summary>
+        /// Создает процесс, выполняет бизнес-логику из DoPerformOperation
+        /// </summary>
         private void Execute()
         {
             nmSum.Value = Math.Round(nmSum.Value, 2);
@@ -237,7 +274,6 @@ namespace SBRF_Soft
                 // Закрываем процесс
                 proc.Close();
 
-                // Очистить строку и значения
                 ClearNumericField();
             }
         }
@@ -269,7 +305,7 @@ namespace SBRF_Soft
                 proc.StartInfo.FileName = cProcessCMD;
 
                 // Ввод команды
-                proc.StartInfo.Arguments = String.Format(cLoadParam, code.eCloseShift, null);
+                proc.StartInfo.Arguments = String.Format(cLoadParam, Code.eCloseShift, null);
 
                 // Без создания окна
                 proc.StartInfo.CreateNoWindow = true;
