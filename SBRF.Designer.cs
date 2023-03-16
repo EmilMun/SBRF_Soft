@@ -41,6 +41,7 @@
             this.сообщенияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_ClearLog = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_HideJournal = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_uploadLog = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_About = new System.Windows.Forms.ToolStripMenuItem();
             this.FireLog = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -121,7 +122,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statuslabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 180);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 301);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(321, 22);
             this.statusStrip1.TabIndex = 5;
@@ -164,7 +165,8 @@
             // 
             this.сообщенияToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuItem_ClearLog,
-            this.MenuItem_HideJournal});
+            this.MenuItem_HideJournal,
+            this.MenuItem_uploadLog});
             this.сообщенияToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 14F);
             this.сообщенияToolStripMenuItem.Name = "сообщенияToolStripMenuItem";
             this.сообщенияToolStripMenuItem.Size = new System.Drawing.Size(91, 29);
@@ -184,6 +186,13 @@
             this.MenuItem_HideJournal.Text = "Скрыть\\показать журнал";
             this.MenuItem_HideJournal.Click += new System.EventHandler(this.MenuItem_HideJournal_Click);
             // 
+            // MenuItem_uploadLog
+            // 
+            this.MenuItem_uploadLog.Name = "MenuItem_uploadLog";
+            this.MenuItem_uploadLog.Size = new System.Drawing.Size(342, 30);
+            this.MenuItem_uploadLog.Text = "Выгрузить журнал";
+            this.MenuItem_uploadLog.Click += new System.EventHandler(this.MenuItem_uploadLog_Click);
+            // 
             // menuItem_About
             // 
             this.menuItem_About.Font = new System.Drawing.Font("Segoe UI", 14F);
@@ -200,9 +209,8 @@
             this.FireLog.FormattingEnabled = true;
             this.FireLog.Location = new System.Drawing.Point(12, 181);
             this.FireLog.Name = "FireLog";
-            this.FireLog.Size = new System.Drawing.Size(297, 4);
+            this.FireLog.Size = new System.Drawing.Size(297, 121);
             this.FireLog.TabIndex = 7;
-            this.FireLog.Visible = false;
             this.FireLog.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FireLog_KeyUp);
             // 
             // label2
@@ -229,7 +237,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(321, 202);
+            this.ClientSize = new System.Drawing.Size(321, 323);
             this.Controls.Add(this.amountDeposited);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.statusStrip1);
@@ -274,6 +282,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label amountDeposited;
         private System.Windows.Forms.ToolStripMenuItem menuItem_About;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_uploadLog;
     }
 }
 

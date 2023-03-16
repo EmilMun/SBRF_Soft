@@ -1,6 +1,12 @@
-﻿using System;
+﻿/*
+    Copyright © 2022 Эмиль Радикович М.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace SBRF_Soft
@@ -222,6 +228,8 @@ namespace SBRF_Soft
 
                 // Изменить сумму депозита
                 DoChangeDeposited(sumval);
+
+                rbPay.Checked = true;
             }
             catch (OverflowException)
             {
@@ -419,11 +427,41 @@ namespace SBRF_Soft
                 // Отображаемый текст на форме
                 "Программа SBRF\n\n" +
                 "Автор: Мунасыпов Эмиль Радикович\n\n" +
-                "Почта: emilmun@radikovich.ru",
+                "Почта: inbox@emilmun.ru\n",
                 // Подпись на форме
                 "О программе", 
                 // Параметры формы
                 MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1); 
+        }
+
+        private void MenuItem_uploadLog_Click(object sender, EventArgs e)
+        {
+            string path = Application.StartupPath + "\\" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss") + ".txt";
+
+            using (FileStream fs = File.Create(path))
+            {
+                string log = "";
+                
+                foreach (var item in FireLog.Items)
+                {
+                    log += item.ToString() + '\n';
+                }
+
+                byte[] info = new UTF8Encoding(true).GetBytes(log);
+                
+                fs.Write(info, 0, info.Length);
+            }
+
+            if (File.Exists(path))
+            {
+                MessageBox.Show(
+                    // Отображаемый текст на форме
+                    "Отчёт о сохранении журнала\n\n" +
+                    "Файл успешно сохранён по пути:\n\n" + path, // путь до файла
+                    // Подпись на форме
+                    "Сохранение журнала",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+            }
         }
     }
 }
